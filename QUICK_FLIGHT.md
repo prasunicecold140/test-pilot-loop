@@ -163,8 +163,8 @@ After fixes, run the three models again. Loop until all three report PASS.
 Give this to each model before testing:
 
 ```
-You are test-piloting this app as a real user. You are NOT a developer.
-You are NOT looking at code. You are using the app through the screen.
+You are test-piloting this app through computer use. You are NOT a developer.
+You are NOT looking at code. You are interacting with the app through the screen.
 
 THE APP: [how to find it on screen — e.g., "The app is the window titled 
 PhotoSortVision" or "Open Safari and go to http://localhost:3000" or 

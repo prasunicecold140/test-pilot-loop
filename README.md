@@ -93,8 +93,15 @@ When you need maximum rigor: multi-agent orchestration, [Ralph Wiggum](https://g
 | [FLIGHT_LOG.md](FLIGHT_DECK/FLIGHT_LOG.md) | Knowledge-tiered UX testing — 3 tiers, agent-steps, Tier Gap Ratio |
 | [PREFLIGHT_CHECK.md](FLIGHT_DECK/PREFLIGHT_CHECK.md) | Configuration — choose personas, tiers, dimensions, thresholds |
 | [AUTOPILOT.md](FLIGHT_DECK/AUTOPILOT.md) | Claude Code companion — teaches your code agent the protocol |
+| [TEST_FLIGHT_PROTOCOL.md](FLIGHT_DECK/TEST_FLIGHT_PROTOCOL.md) | How the test pilot tests — screen-by-screen execution protocol |
 
 **→ [Full framework: FLIGHT_DECK/](FLIGHT_DECK/)**
+
+### 🔌 Integrations
+
+| File | What It Is |
+|------|-----------|
+| [OPENCLAW_SKILL.md](OPENCLAW_SKILL.md) | OpenClaw skill — self-contained version for OpenClaw agent systems |
 
 ---
 
@@ -111,7 +118,7 @@ This repo contains both **reference docs** (explaining the methodology) and **ru
 | `PERSONAS/agents/*.md` | `.claude/agents/` | Persona subagent files |
 | `PRD.md` (you write this) | Project root | Your product requirements |
 
-The remaining files (`TEST_PILOT_LOOP.md`, `QUICK_FLIGHT.md`, `PILOT_HANDBOOK.md`, `FLIGHT_DEBRIEF.md`, `FLIGHT_LOG.md`) are reference docs — read them to understand the framework, but they don't need to live in your project.
+The remaining files (`TEST_PILOT_LOOP.md`, `QUICK_FLIGHT.md`, `PILOT_HANDBOOK.md`, `FLIGHT_DEBRIEF.md`, `FLIGHT_LOG.md`, `TEST_FLIGHT_PROTOCOL.md`, `OPENCLAW_SKILL.md`) are reference docs — read them to understand the framework, but they don't need to live in your project.
 
 ---
 
@@ -197,7 +204,8 @@ test-pilot-loop/
 │   ├── FLIGHT_DEBRIEF.md                  ← UX findings, bugs, escalation outcomes
 │   ├── FLIGHT_LOG.md                      ← Cross-run metrics + Tier Gap tracking
 │   ├── PREFLIGHT_CHECK.md                 ← Test configuration + run setup
-│   └── AUTOPILOT.md                         ← Claude Code operating instructions
+│   ├── AUTOPILOT.md                          ← Claude Code operating instructions
+│   └── TEST_FLIGHT_PROTOCOL.md               ← Screen-by-screen execution protocol
 ├── PERSONAS/                              ← 📋 Persona subagent files
 │   ├── README.md                          ← Install guide + usage
 │   ├── agents/                            ← Drop into .claude/agents/
@@ -210,6 +218,7 @@ test-pilot-loop/
 │   │   └── test-pilot-tier3-insider.md    ← Tier 3 (has PRD)
 │   └── archetypes/
 │       └── archetype-overlays.md          ← Creator / Admin / Consumer
+├── OPENCLAW_SKILL.md                      ← OpenClaw skill version
 ├── CITATION.cff                           ← Citation metadata
 └── LICENSE                                ← MIT
 ```

@@ -173,6 +173,8 @@ Research supports this approach: a 2025 study on synthetic heuristic evaluation 
 
 ## 🔄 UX TEST SESSION WORKFLOW
 
+> **For the screen-by-screen execution protocol** — how the test pilot inspects, inventories, predicts, acts, and evaluates on each screen — see [TEST_FLIGHT_PROTOCOL.md](TEST_FLIGHT_PROTOCOL.md). This section covers the knowledge-tier deployment and comparative analysis workflow.
+
 ### Prerequisites
 - ✅ Functional testing PASSED (all features work correctly)
 - ✅ App is running and accessible via computer use

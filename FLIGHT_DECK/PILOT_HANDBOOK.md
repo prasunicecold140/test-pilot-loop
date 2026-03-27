@@ -175,6 +175,8 @@ Every test session evaluates **six dimensions.** The Test Pilot scores each on a
 
 ## 🔄 TEST SESSION WORKFLOW
 
+> **For the step-by-step execution protocol** — how to inspect each screen, inventory elements, form predictions, and evaluate actions — see [TEST_FLIGHT_PROTOCOL.md](TEST_FLIGHT_PROTOCOL.md). This section covers the persona rotation and session structure; the protocol covers the screen-by-screen testing cycle (SEE→INVENTORY→PREDICT→ACT→EVALUATE).
+
 ### How to Spawn Test Pilot Personas
 
 **Option A: Sequential persona rotation (each persona tests one at a time)**

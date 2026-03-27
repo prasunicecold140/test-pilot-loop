@@ -267,8 +267,8 @@ Session Start: User opens Cowork (Opus) + Claude Code
 
 Opus prompt to itself:
 ```
-FORGET everything you know about this project. You are a person
-who just downloaded this app. You don't know what it does, how
+You have no prior knowledge of this project. You are constrained
+to knowing only the app name. You don't know what it does, how
 it works, or what any button means.
 
 THE APP: [how to find it on screen — e.g., "The app window titled 
@@ -454,6 +454,7 @@ You don't always need all three levels:
 When you're ready for more:
 
 - **Quick Flight** → Want a faster check with zero setup? Use the 3-Model Quick Test where Opus, Sonnet, and Haiku each test your app independently. See `QUICK_FLIGHT.md`.
+- **Test Flight Protocol** → Want the detailed screen-by-screen execution protocol? How to inspect, inventory, predict, act, and evaluate on every screen — including CLI-Anything hybrid testing and debug overlays. See `FLIGHT_DECK/TEST_FLIGHT_PROTOCOL.md`.
 - **Add personas** → Instead of one Opus testing as "cold user," deploy persona subagents (Alex the power user, Pat the struggling user, Sam the accessibility user) for deeper behavioral testing. See `PERSONAS/`.
 - **Add archetypes** → Layer Creator/Admin/Consumer behaviors on top of knowledge levels based on which feature is being tested.
 - **Add orchestration** → Risk tiers, kill switch, Opus patrol, Ralph Wiggum build loop, confidence scores. See `FLIGHT_DECK/`.

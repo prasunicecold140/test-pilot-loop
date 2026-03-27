@@ -22,6 +22,7 @@ Write code that not only works — but that a confused first-time user can figur
 | `FLIGHT_DECK/PILOT_HANDBOOK.md` | How your work will be tested | Read once to understand expectations |
 | `FLIGHT_DECK/FLIGHT_DEBRIEF.md` | How bugs will be reported back to you | Read once to understand fix format |
 | `FLIGHT_DECK/PREFLIGHT_CHECK.md` | Testing depth settings — personas, tiers, thresholds | Read once to know current project testing level |
+| `FLIGHT_DECK/TEST_FLIGHT_PROTOCOL.md` | How the test pilot tests screen by screen | Read once to understand the execution cycle |
 | This file (`AUTOPILOT.md`) | Your rules of engagement | You already loaded this |
 
 ---
