@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this framework, please cite it as below."
+type: software
+title: "Test Pilot Loop"
+abstract: >-
+  A multi-agent AI testing framework where AI agents test software through
+  computer use — with different personas, knowledge tiers, and structured
+  feedback loops. The AI test pilot operates your app through computer use
+  (clicking, typing, navigating) and reports UX issues back to the build agent.
+authors:
+  - family-names: Su
+    given-names: Huan
+version: 0.1.0
+date-released: 2026-03-26
+license: MIT
+url: "https://github.com/suhuan/test-pilot-loop"
+repository-code: "https://github.com/suhuan/test-pilot-loop"
+keywords:
+  - ai-testing
+  - ux-testing
+  - computer-use
+  - multi-agent
+  - persona-testing
+  - claude
+  - accessibility
