@@ -22,7 +22,7 @@ After your code agent builds a feature, three Claude models **use the app throug
 
 ## Why Three Models
 
-Each Claude model thinks differently. That difference IS the testing:
+Each Claude model processes at a different depth. That variation serves as the testing strategy:
 
 | Model | Tests As | What It Catches |
 |-------|---------|-----------------|

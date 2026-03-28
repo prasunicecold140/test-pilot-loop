@@ -249,7 +249,7 @@ This framework was created by a developer who got tired of shipping features tha
 
 The core insight: **the person who builds the software is the worst person to test it.** They know too much. They can't see what's confusing because nothing confuses them.
 
-So we built an AI test pilot that can forget what it knows and fly the product as someone who doesn't.
+So we built an AI test pilot that operates under a constrained context — no prior knowledge of the product, no insider assumptions — and evaluates the app through computer use the way a new user would encounter it.
 
 ---
 

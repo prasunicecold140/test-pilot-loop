@@ -128,8 +128,10 @@ Cowork accesses the Obsidian vault by **reading and writing .md files directly**
 2. ✅ Obsidian vault folder mounted in Cowork
 3. ✅ `FLIGHT_DECK/FLIGHT_PLAN.md` exists in project
 4. ✅ `CLAUDE.md` exists in project root (imports FLIGHT_DECK/AUTOPILOT.md)
-5. ✅ Claude Code / Second Builder sessions can read/write the project folder
-6. ✅ AUDIT_SCREENSHOTS/ folder exists
+5. ✅ `FLIGHT_DECK/PREFLIGHT_CHECK.md` exists (testing depth and persona settings)
+6. ✅ `FLIGHT_DECK/TEST_FLIGHT_PROTOCOL.md` exists (screen-by-screen execution protocol)
+7. ✅ Claude Code / Second Builder sessions can read/write the project folder
+8. ✅ AUDIT_SCREENSHOTS/ folder exists
 
 ---
 
