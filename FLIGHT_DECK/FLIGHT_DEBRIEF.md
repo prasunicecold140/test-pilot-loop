@@ -132,11 +132,15 @@ When the AI Test Pilot finds an issue, it writes it in this exact format so the 
 │  SCREENSHOT: [path/to/file.png]                          │
 │  ENVIRONMENT: [iOS Simulator / macOS / etc.]             │
 │                                                           │
+│  ROOT CAUSE:    [Category — e.g., event handler, layout, │
+│                  state mgmt, missing validation, copy]    │
 │  SUGGESTED FIX: [If obvious — optional]                  │
-│  RELATED BUGS: [BUG-T001-002, if related]                │
+│  RELATED BUGS:  [BUG-T001-002, if related]               │
 │                                                           │
 └───────────────────────────────────────────────────────────┘
 ```
+
+> **Bug clustering:** Group findings by ROOT CAUSE before passing to the build agent. Fixing one root cause often resolves multiple bugs — 20 findings may reduce to 3–5 fixes.
 
 ### Example Bug Report:
 ```
@@ -161,9 +165,10 @@ When the AI Test Pilot finds an issue, it writes it in this exact format so the 
 │  SCREENSHOT: AUDIT_SCREENSHOTS/BUG-T004-001.png         │
 │  ENVIRONMENT: iPhone 15 Pro Simulator, iOS 18.2          │
 │                                                           │
+│  ROOT CAUSE:    Event handler                            │
 │  SUGGESTED FIX: Likely an event handler conflict         │
 │                 with the component initialization.       │
-│  RELATED BUGS: None                                      │
+│  RELATED BUGS:  None                                     │
 │                                                           │
 └───────────────────────────────────────────────────────────┘
 ```

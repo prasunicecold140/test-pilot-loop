@@ -26,16 +26,43 @@ Every screen gets this treatment. No exceptions.
 
 ---
 
-## Hybrid Testing: CLI First, Computer Use Second
+## Three Verification Layers
 
-Computer use is slow. Many checks are faster through CLI.
+| Layer | Method | Speed | Coverage | Best For |
+|-------|--------|-------|----------|----------|
+| **Layer 1: CLI** | Terminal commands, API calls | Seconds | Data state, errors, health | Phase 0 ground checks, Mode C verification |
+| **Layer 2: Accessibility API** | macOS Accessibility Inspector, Playwright `accessibility.snapshot()`, iOS AX | Seconds | Labels, focus order, element roles, navigation structure | Label completeness, keyboard nav, screen reader compatibility |
+| **Layer 3: Computer Use** | Screenshots, clicks, typing | Minutes | Full visual UX, layout, flows | Phases 1–3 flight testing |
+
+Use the cheapest layer that answers the question. Layer 2 covers ~60% of usability checks (labels, focus order, element roles) at Layer 1 speed.
+
+### Layer 2: Accessibility API Quick Reference
+
+| Platform | Tool | Command |
+|----------|------|---------|
+| **macOS** | Accessibility Inspector | Xcode → Open Developer Tool → Accessibility Inspector |
+| **Web** | Playwright | `page.accessibility.snapshot()` — returns full element tree with roles and names |
+| **iOS** | XCUITest AX | `XCUIApplication().accessibilityElements()` |
+| **Web (standalone)** | pa11y | `npx pa11y http://localhost:3000 --reporter json` |
+
+**What Layer 2 catches without screenshots:**
+- Buttons with no accessible label → usability bug
+- Missing focus order → keyboard users can't navigate
+- Elements with wrong roles (div acting as button) → assistive tech breaks
+- Duplicate IDs → automation selectors fail
+
+---
+
+## Hybrid Testing: CLI First, Accessibility Second, Computer Use Third
+
+Computer use is slow. Many checks are faster through CLI or accessibility APIs.
 
 ```
-PHASE 0: GROUND CHECK (CLI)        ← Seconds
-PHASE 1–3: FLIGHT (Computer Use)   ← Minutes
+PHASE 0: GROUND CHECK (CLI + Accessibility)   ← Seconds
+PHASE 1–3: FLIGHT (Computer Use)              ← Minutes
 ```
 
-Do CLI first. Catch the easy stuff fast. Spend the expensive computer-use time on what only visual inspection can evaluate.
+Do CLI and accessibility checks first. Catch the easy stuff fast. Spend the expensive computer-use time on what only visual inspection can evaluate.
 
 ### CLI-Anything Integration (Optional)
 
@@ -61,7 +88,7 @@ CLI-Anything is optional. All phases work with hand-written CLI commands.
 
 ---
 
-## Phase 0: Ground Check (CLI)
+## Phase 0: Ground Check (CLI + Accessibility API)
 
 Run before launching visual inspection. Each takes seconds.
 
@@ -80,7 +107,8 @@ cli-anything-yourapp --json list-features
 | **App running?** | `curl -s -o /dev/null -w "%{http_code}" http://localhost:3000` or `pgrep -x "YourApp"` |
 | **Errors in logs?** | `tail -50 app.log \| grep -i "error\|fatal\|crash"` |
 | **Data state?** | `sqlite3 app.db "SELECT COUNT(*) FROM [table];"` or check API |
-| **Accessibility?** | `npx pa11y http://localhost:3000` |
+| **Accessibility (violations)?** | `npx pa11y http://localhost:3000` |
+| **Accessibility (structure)?** | Layer 2 check — see Three Verification Layers above |
 | **Performance?** | `curl -s -o /dev/null -w "Total: %{time_total}s" http://localhost:3000` |
 
 ```
@@ -148,6 +176,28 @@ Primary action the screen wants me to take: [guess]
 Confidence: OBVIOUS / THINK SO / NO IDEA
 Visual clarity: CLEAN / BUSY / CLUTTERED / EMPTY
 ```
+
+### 1.5 Early Abort Gate (Cold Tier Only)
+
+If the Cold User cannot identify the primary action within 5 attempts, the app has a fundamental discoverability problem. Stop the test early — further testing won't produce useful signal.
+
+```
+EARLY ABORT CHECK
+═════════════════
+After 5 actions:
+  ✅ Found primary action → continue to Phase 2
+  ❌ Still lost → ABORT — file P0 discoverability finding
+
+Checkpoints:
+  • 30 seconds — Can the user identify what the app does?
+  • 2 minutes  — Can the user start the primary task?
+  • 5 minutes  — Can the user complete the primary task?
+
+If any checkpoint answer is NO for Cold tier → flag as finding.
+If 30-second checkpoint is NO → strong candidate for early abort.
+```
+
+Early abort applies only to Cold tier. Guided and Insider tiers have external context and should complete the full test.
 
 ---
 
@@ -298,7 +348,7 @@ The cycle is identical for all tiers. Only the PREDICT and EVALUATE steps change
 
 | Phase | Method | Time |
 |-------|--------|------|
-| Phase 0: Ground check | CLI | 1–2 min |
+| Phase 0: Ground check | CLI + Accessibility API | 1–2 min |
 | Phase 1: Preflight | Computer use | 2–3 min |
 | Phase 2: Flight | Hybrid | 5–10 min |
 | Phase 3: Cleanup | Computer use | 3–5 min |
@@ -322,4 +372,32 @@ Full three-tier test: ~45–70 min. Quick Flight (cold only): ~15 min.
 
 ---
 
-*Test Flight Protocol v1.0 — Part of the Test Pilot Loop by Huan Su.*
+## Smart Retest Scope
+
+After bug fixes, use `git diff` to determine which dimensions need retesting. Skip everything else.
+
+| Change Type | Retest Dimensions | Skip |
+|-------------|-------------------|------|
+| CSS / layout / styles | Visual Design only | Functional, Navigation, Usability |
+| Labels / strings / copy | Usability, Accessibility | Functional, Visual (unless layout changed) |
+| Event handlers / logic | Functional Correctness | Visual (unless UI changed) |
+| Navigation / routing | Navigation, Functional | Visual (unless layout changed) |
+| Data model / API | Functional, Data Integrity | Visual, Usability (unless UI changed) |
+| Full feature addition | All dimensions | — |
+
+```bash
+# Determine retest scope from the last fix commit
+git diff --name-only HEAD~1 | while read f; do
+  case "$f" in
+    *.css|*.scss|*.styled.*) echo "→ Retest: Visual Design" ;;
+    *.strings|*.json|*.md)   echo "→ Retest: Usability + Accessibility" ;;
+    *.swift|*.ts|*.py)       echo "→ Retest: Functional Correctness" ;;
+  esac
+done
+```
+
+Full retest: ~20 min. Scoped retest: ~3–5 min. Use scoped retest for single-bug fixes. Use full retest for feature additions or multi-file changes spanning more than one category.
+
+---
+
+*Test Flight Protocol v1.1 — Part of the Test Pilot Loop by Huan Su.*
