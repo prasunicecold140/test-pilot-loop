@@ -142,6 +142,8 @@ OPUS retests...
 
 ### First-Time Setup (New Project)
 
+> **For a complete step-by-step setup guide that ANY agent can read and execute, see `FLIGHT_DECK/SETUP.md`.** It covers both builder (Claude Code / Codex) and test pilot (Cowork) setup in a single file with executable checklists.
+
 Before running your first test flight, the framework needs to be installed into your project. Either Cowork or Claude Code can do this — the human director tells one of them to read the framework repo and set it up.
 
 **Step 1: Direct an agent to read the framework**
@@ -190,12 +192,14 @@ After this one-time setup, use the Session Start steps below for every test flig
 
 ### Session Start
 
+> **Give any agent `FLIGHT_DECK/SETUP.md`** — it auto-detects its role (builder vs test pilot) and executes the right steps. The sections below are the detailed reference.
+
 Launch both apps at the same time on the same Mac. **Both agents must confirm patrol is active before any building starts.**
 
 1. **Open Cowork with Opus**
 2. **Open Claude Code** (or any AI coding agent)
 3. **Create `FLIGHT_DECK/FLIGHT_PLAN.md`** if it doesn't exist — this is the shared communication file
-4. **Start Cowork patrol (MANDATORY)** — give Cowork the standing patrol instruction (below). Cowork will NOT automatically patrol unless explicitly told to. Without this, Cowork sits idle and never picks up `READY_FOR_TEST` signals. After receiving the instruction, Cowork writes confirmation to FLIGHT_PLAN.md.
+4. **Start Cowork patrol (MANDATORY)** — choose one of two methods: (a) give Cowork the manual patrol instruction in your active session, or (b) set up a Cowork Scheduled Task for autonomous operation. See "Cowork Patrol — Two Options" below. Cowork will NOT automatically patrol unless explicitly told to. Without this, Cowork sits idle and never picks up `READY_FOR_TEST` signals.
 5. **Start Claude Code auto-patrol (MANDATORY)** — this is what makes the dual-patrol model work. Claude Code runs on-demand per message, not as a persistent process. Without an explicit loop, it will never check `FLIGHT_PLAN.md` on its own.
 
 **Option 1: fswatch (RECOMMENDED — event-driven, zero waste)**
@@ -270,13 +274,25 @@ PRE-FLIGHT CHECKLIST (all must pass before loop starts):
 ☐ Insider tier has read full spec (CLAUDE.md + PRD.md) — confirmed by writing
     "Spec read: [file list]. [X] screens, [Y] total elements identified."
     to AGENT OUTPUT LOG before first test
+☐ If using scheduled task: app access pre-approved (request_access called for all needed apps)
+☐ If using scheduled task: FLIGHT_PLAN.md Project Info block has PROJECT_PATH, APP_LAUNCH, BUILD_COMMAND
+☐ If using scheduled task: "Run now" test verified (patrol can read file + take screenshots)
 ```
 
 **Do not start building until all confirmations are present.** The loop requires two patrolling agents — one building, one testing — and both must have full project knowledge. A single missing check breaks the feedback cycle.
 
-### The Cowork Patrol Instruction (MANDATORY)
+### Cowork Patrol — Two Options
 
-Give Cowork Opus this prompt at the start of your session. **This is not optional.** Without it, Cowork will never check for `READY_FOR_TEST` and Claude Code's builds will sit untested:
+Cowork needs an explicit patrol instruction to check for `READY_FOR_TEST` signals. Without it, Cowork sits idle and Claude Code's builds go untested. Choose one:
+
+| Option | Best For | Pros | Cons |
+|--------|----------|------|------|
+| **Manual Prompt** | Daytime use, human present | Runs in your active session, you see everything live | Stops when session ends or compacts |
+| **Scheduled Task** | Overnight/unattended, long loops | Survives session endings, runs on cron, fully autonomous | Each run is a new session (no shared memory), requires pre-approved app access |
+
+#### Option 1: Manual Patrol Prompt
+
+Give Cowork Opus this prompt at the start of your session:
 
 ```
 You are the test pilot and patrol monitor for this project.
@@ -316,6 +332,43 @@ Standing by for READY_FOR_TEST signals.
 
 **Why 10 minutes?** Designed for overnight operation. Nobody is waiting. For daytime use, tell Opus "check every 5 minutes" or simply say "check the file now."
 
+#### Option 2: Cowork Scheduled Task (RECOMMENDED for autonomous operation)
+
+Cowork supports scheduled tasks via `create_scheduled_task`. Each run spawns a new Cowork session on a cron schedule, reads `FLIGHT_PLAN.md`, and — critically — **actually tests the app** when STATUS is `READY_FOR_TEST`. All output goes to `FLIGHT_PLAN.md` (the shared file), not to chat.
+
+**Why this is better for long loops:** Manual patrol depends on the Cowork session staying alive. If the session compacts, the user closes the window, or the context fills up, patrol stops. A scheduled task runs independently on a timer and survives all of these.
+
+**Prerequisites — complete these BEFORE creating the task:**
+
+1. **Pre-approve app access.** In an active Cowork session, call `request_access` for ALL apps the test pilot will need (your app, Finder, Preview, and any others). Scheduled tasks run unattended — they cannot prompt for approval. If access isn't pre-granted, computer use actions fail silently.
+
+2. **Mount the project folder.** The folder containing `FLIGHT_DECK/FLIGHT_PLAN.md` must be mounted in Cowork.
+
+3. **Verify FLIGHT_PLAN.md has a Project Info block** with at minimum:
+   - `PROJECT_PATH` — absolute path to the project root on the host Mac
+   - `APP_LAUNCH` — command or path to launch the built app
+   - `BUILD_COMMAND` — how Claude Code builds the project
+
+4. **Create the scheduled task** using `create_scheduled_task` with the patrol prompt from `test-pilot-patrol-prompt.md` and `cronExpression: "*/10 * * * *"`.
+
+5. **Verify it runs.** Click "Run now" once while you're present to confirm the patrol can read `FLIGHT_PLAN.md` and take screenshots of the app.
+
+**The patrol prompt** is provided as a standalone file: `test-pilot-patrol-prompt.md`. It handles:
+- Reading `FLIGHT_PLAN.md` and extracting STATUS, ITERATION, and NEXT_ACTION_FOR_COWORK
+- Idle detection (3-strike rule: 3 checks with no change → auto-disable to save tokens)
+- `READY_FOR_TEST` → full test flight: launch app, execute test steps with screenshots, write results to Feedback Queue, update STATUS
+- `BUILD_REQUESTED` → stand by (Claude Code is building)
+- `ALL_BUGS_VERIFIED` / `PASS` → scan Feedback Queue for unresolved bugs, stop if clean
+- `GLOBAL_STOP: FROZEN` → halt immediately
+- Escalation rules (crash, 3x retest failure, access denied)
+
+**Key design constraint:** Each scheduled task run is a NEW session with no memory of prior runs. The patrol state file (`FLIGHT_DECK/.patrol_state.txt`) persists idle counts and last-seen status between runs. All communication goes through `FLIGHT_PLAN.md` — never through chat output (which nobody reads).
+
+After setup, the first successful run writes confirmation to FLIGHT_PLAN.md's AGENT OUTPUT LOG:
+```
+[timestamp] — Cowork patrol check: STATUS is [status], iteration [N]. Standing by.
+```
+
 ### Patrol Lifecycle — Start, Stop, Restart
 
 Patrols follow the lifecycle of a test flight cycle. They are not permanent.
@@ -323,8 +376,9 @@ Patrols follow the lifecycle of a test flight cycle. They are not permanent.
 | Phase | Trigger | What Happens |
 |-------|---------|-------------|
 | **START** | `FLIGHT_PLAN.md` created, or human says "start test pilot loop" | Both agents set up patrol and write confirmation to AGENT OUTPUT LOG. No building until both confirm. |
-| **AUTO-STOP** | STATUS reaches `ALL_BUGS_VERIFIED` or `PASS` | Cowork writes TEST FLIGHT COMPLETE summary (bugs fixed table + UX feedback table + timing) → both agents verify nothing is stuck → write "Patrol complete" to log → stop. Claude Code stops fswatch (or cancels `/loop` cron). Cowork stops checking. |
-| **RESTART** | Human says "test pilot loop" or "start next cycle," or sets new tasks + STATUS back to `BUILD_REQUESTED` | Both agents re-confirm patrol in writing before building resumes. |
+| **AUTO-STOP** | STATUS reaches `ALL_BUGS_VERIFIED` or `PASS` | Cowork writes TEST FLIGHT COMPLETE summary (bugs fixed table + UX feedback table + timing) → both agents verify nothing is stuck → write "Patrol complete" to log → stop. Claude Code stops fswatch (or cancels `/loop` cron). Cowork stops checking (manual) or disables scheduled task via `update_scheduled_task(enabled=false)`. |
+| **IDLE-STOP** | 3 consecutive patrol checks with no STATUS change (scheduled task only) | Scheduled task auto-disables after 30 minutes of no activity to save tokens. Human says "resume patrol" to re-enable. |
+| **RESTART** | Human says "test pilot loop" or "start next cycle," or sets new tasks + STATUS back to `BUILD_REQUESTED` | Both agents re-confirm patrol in writing before building resumes. For scheduled tasks: `update_scheduled_task(enabled=true)`. |
 
 **Before auto-stopping, both agents must verify:** no stuck feedback, no unanswered bugs, no pending tasks. If anything is unresolved, write a warning to FLIGHT_PLAN.md and keep polling.
 

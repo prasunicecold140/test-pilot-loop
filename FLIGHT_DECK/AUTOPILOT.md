@@ -27,6 +27,7 @@ Write code that not only works — but that a confused first-time user can figur
 | `FLIGHT_DECK/FLIGHT_LOG.md` | Cross-run metrics, Tier Gap tracking, UX phase testing | Read once to understand how UX quality is measured across tiers |
 | `FLIGHT_DECK/INSIDER_TESTING_SKILL.md` | Insider testing methodology — Five Lenses, 8 phases, oracles, outcome verification | Read once. This is how Insider tier testing works. |
 | `FLIGHT_DECK/INSIDER_GOALS.md` | Project-specific testing playbook (generated from Phase 0 Q&A) | **Test pilot reads before every test flight.** Created during Step 1.5. |
+| `FLIGHT_DECK/SETUP.md` | Step-by-step setup guide for BOTH agents (builder + test pilot) | **Read on first setup.** Works for Claude Code, Codex, and Cowork. |
 | This file (`AUTOPILOT.md`) | Your rules of engagement | You already loaded this |
 
 ---
@@ -111,6 +112,8 @@ Also request: `clipboardRead`, `clipboardWrite`, `systemKeyCombos`.
 
 **Do this in ONE `request_access` call at session start — not piecemeal during testing.** The human approves once, then the entire test flight runs uninterrupted.
 
+**Critical for scheduled tasks:** If using a Cowork Scheduled Task for patrol, app access MUST be pre-approved during the initial setup session. Scheduled tasks run unattended — there is no human to click "Allow." If access isn't pre-granted, computer use actions fail silently and the test pilot cannot test.
+
 Without pre-granted access:
 ```
 Cowork starts test → opens app → ⏸️  "Allow PhotoSortVision?" → human approves →
@@ -151,6 +154,8 @@ If any of these prompt for approval, the permissions are not configured correctl
 ---
 
 ## 🔁 Auto-Patrol Setup (Required)
+
+> **For a complete step-by-step setup guide that works for ANY agent (Claude Code, Codex, Cowork), see `FLIGHT_DECK/SETUP.md`.** The sections below are the detailed reference. SETUP.md is the executable checklist.
 
 After installing the framework, Claude Code **MUST** complete these setup steps. This is not optional — without them, the dual-patrol model doesn't work.
 
@@ -207,10 +212,15 @@ If STATUS is BUILD_REQUESTED or there is new feedback addressed to Claude Code:
   5. Write output to AGENT OUTPUT LOG
   6. Update STATUS → READY_FOR_TEST
 If STATUS is ALL_BUGS_VERIFIED or PASS:
-  1. Verify no stuck feedback, unanswered bugs, or pending tasks
-  2. If all clear → write 'Patrol complete. Watcher stopped.' to AGENT OUTPUT LOG
-  3. Stop watching — the cycle is done.
-  4. If anything unresolved → write warning to FLIGHT_PLAN.md, keep watching.
+  1. Read the FULL Feedback Queue — scan every entry for unresolved bugs.
+     STATUS alone is NOT sufficient. A later feedback entry may contain NEW bugs
+     filed after STATUS was set (e.g., Phase 3 found BUG-020 after iteration 11
+     set ALL_BUGS_VERIFIED). If any bug in the queue lacks a 'VERIFIED' or 'FIXED'
+     verdict, treat it as unresolved.
+  2. Also verify: no stuck feedback, no unanswered bugs, no pending tasks.
+  3. If all clear → write 'Patrol complete. Watcher stopped.' to AGENT OUTPUT LOG
+  4. Stop watching — the cycle is done.
+  5. If anything unresolved → write warning to FLIGHT_PLAN.md, keep watching.
 If STATUS is READY_FOR_TEST → do nothing, waiting for Cowork.
 If GLOBAL_STOP is FROZEN → stop all work, write frozen state to log.
 Re-arm the watcher for the next change."
@@ -232,10 +242,15 @@ If STATUS is BUILD_REQUESTED or there is new feedback addressed to Claude Code:
   5. Write output to AGENT OUTPUT LOG
   6. Update STATUS → READY_FOR_TEST
 If STATUS is ALL_BUGS_VERIFIED or PASS:
-  1. Verify no stuck feedback, unanswered bugs, or pending tasks
-  2. If all clear → write 'Patrol complete. Loop stopped.' to AGENT OUTPUT LOG
-  3. Cancel this /loop — the cycle is done. Do not keep polling.
-  4. If anything unresolved → write warning to FLIGHT_PLAN.md, keep polling.
+  1. Read the FULL Feedback Queue — scan every entry for unresolved bugs.
+     STATUS alone is NOT sufficient. A later feedback entry may contain NEW bugs
+     filed after STATUS was set (e.g., Phase 3 found BUG-020 after iteration 11
+     set ALL_BUGS_VERIFIED). If any bug in the queue lacks a 'VERIFIED' or 'FIXED'
+     verdict, treat it as unresolved.
+  2. Also verify: no stuck feedback, no unanswered bugs, no pending tasks.
+  3. If all clear → write 'Patrol complete. Loop stopped.' to AGENT OUTPUT LOG
+  4. Cancel this /loop — the cycle is done. Do not keep polling.
+  5. If anything unresolved → write warning to FLIGHT_PLAN.md, keep polling.
 If STATUS is READY_FOR_TEST → do nothing, waiting for Cowork.
 If GLOBAL_STOP is FROZEN → stop all work, write frozen state to log."
 ```
@@ -247,6 +262,7 @@ If GLOBAL_STOP is FROZEN → stop all work, write frozen state to log."
 Add these so Claude Code self-escalates:
 
 - `GLOBAL_STOP: FROZEN` → alert human, halt all work
+- **Idle patrol 3-strike rule:** if patrol checks 3 consecutive times with no STATUS change and no new feedback, stop polling and alert the human: "Patrol idle for 3 checks (30 min). Stopping to avoid wasting tokens. Say 'resume patrol' to restart." This applies to BOTH agents — Claude Code's fswatch/loop AND Cowork's patrol.
 - Cowork stuck 30+ min with no update → write escalation to FLIGHT_PLAN.md
 - Build fails 2x on the same fix → alert human before third attempt
 - Bug fails retest 3x → alert human, likely architectural issue
@@ -255,9 +271,13 @@ Add these so Claude Code self-escalates:
 
 ### For Cowork (Opus in desktop app):
 
-Cowork patrol setup is **equally mandatory**. Cowork stays open as a persistent session with computer use, but it will NOT automatically patrol unless explicitly instructed. The human director **must** give Cowork the standing patrol instruction from `TEST_PILOT_LOOP.md` at session start. Without this, Cowork will sit idle and never pick up `READY_FOR_TEST` signals from Claude Code.
+Cowork patrol setup is **equally mandatory**. Cowork will NOT automatically patrol unless explicitly instructed. The human director chooses one of two methods — see `TEST_PILOT_LOOP.md` → "Cowork Patrol — Two Options" for full details:
 
-After receiving the patrol instruction, Cowork should write confirmation to FLIGHT_PLAN.md:
+**Option A: Manual Patrol Prompt** — give Cowork the standing patrol instruction from `TEST_PILOT_LOOP.md` at session start. Best for daytime use when the human is present. Stops when the session ends.
+
+**Option B: Cowork Scheduled Task (RECOMMENDED for autonomous operation)** — use `create_scheduled_task` with the patrol prompt from `test-pilot-patrol-prompt.md`. Runs on a cron schedule (default: every 10 minutes), survives session endings, and tests the app fully autonomously. Requires pre-approved app access via `request_access` during initial setup — the scheduled task itself must NEVER call `request_access`.
+
+After either method is configured, Cowork should write confirmation to FLIGHT_PLAN.md:
 
 ```
 [timestamp] — Cowork Opus
@@ -293,12 +313,16 @@ Patrols are not permanent. They follow the lifecycle of a test flight cycle.
 - Both agents must confirm in writing (see Verification above)
 
 **When to AUTO-STOP patrol:**
-- When STATUS reaches `ALL_BUGS_VERIFIED` or `PASS` — the cycle is complete
+- When STATUS reaches `ALL_BUGS_VERIFIED` or `PASS` **AND** the Feedback Queue contains zero unresolved bugs
+- **⚠️ STATUS alone is NOT sufficient to stop.** A feedback entry may contain NEW bugs filed after STATUS was set. Example: iteration 11 set `ALL_BUGS_VERIFIED` for BUG-017/019, but Phase 3 testing then filed BUG-020 (S2 Critical) in the same Feedback Queue. Stopping on STATUS alone would miss the new critical bug entirely.
+- **Auto-stop check (BOTH conditions required):**
+  1. STATUS is `ALL_BUGS_VERIFIED` or `PASS`
+  2. Scan the FULL Feedback Queue — every bug entry has a `VERIFIED` or `FIXED` verdict, no unresolved bugs remain
 - **Cowork writes TEST FLIGHT COMPLETE summary first** (see `FLIGHT_DEBRIEF.md` → Test Flight Complete): all bugs fixed (table), all UX feedback collected (table with Cowork assessment), testing config used, timing. This is the handoff document for the human.
-- Claude Code (fswatch): detect terminal status → write "Patrol complete. Watcher stopped." to AGENT OUTPUT LOG → stop the fswatch background process
-- Claude Code (/loop fallback): detect terminal status → write "Patrol complete. Loop stopped." to AGENT OUTPUT LOG → cancel the `/loop` cron job
-- Cowork: write summary → write "Patrol complete. Standing down." to AGENT OUTPUT LOG → stop checking
-- **Before stopping, run escalation checks:** verify no stuck feedback, no unanswered bugs, no pending tasks. If anything is unresolved, do NOT stop — write a warning to FLIGHT_PLAN.md instead
+- Claude Code (fswatch): detect terminal status + verify queue → write "Patrol complete. Watcher stopped." to AGENT OUTPUT LOG → stop the fswatch background process
+- Claude Code (/loop fallback): detect terminal status + verify queue → write "Patrol complete. Loop stopped." to AGENT OUTPUT LOG → cancel the `/loop` cron job
+- Cowork: verify queue + write summary → write "Patrol complete. Standing down." to AGENT OUTPUT LOG → stop checking
+- **If STATUS says verified but Feedback Queue has unresolved bugs:** do NOT stop — write a warning to FLIGHT_PLAN.md: "STATUS is ALL_BUGS_VERIFIED but Feedback Queue contains unresolved bugs: [list]. Updating STATUS to BUILD_REQUESTED." Then update STATUS accordingly.
 
 **When to RESTART patrol:**
 - Human explicitly says "test pilot loop" or "start next cycle"
